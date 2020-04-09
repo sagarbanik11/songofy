@@ -24,22 +24,24 @@ Installation Steps
 Screenshots
 ==================
 
-####    Landing Page
+###    Landing Page
 
 ![landing page](https://bitbucket.org/sagarbanik/songofy/raw/97bc96417666072be91bc78d56c8af7b9343dca7/media/readme/landingpage.png)
 
-####    User Login
+###    User Login
 
 ![loginpage](https://bitbucket.org/sagarbanik/songofy/raw/97bc96417666072be91bc78d56c8af7b9343dca7/media/readme/login.png)
 
-####    User Registraion
+###    User Registraion
 
 ![Reg_page](https://bitbucket.org/sagarbanik/songofy/raw/97bc96417666072be91bc78d56c8af7b9343dca7/media/readme/registraion.png)
 
-####    Add Song
+###    Add Song
 
 ![Add Song](https://bitbucket.org/sagarbanik/songofy/raw/97bc96417666072be91bc78d56c8af7b9343dca7/media/readme/addsong.png)
 
-####    Add New Artist with Ajax
+###    Add New Artist with Ajax
 
 ![Add Artist](https://bitbucket.org/sagarbanik/songofy/raw/97bc96417666072be91bc78d56c8af7b9343dca7/media/readme/addartist.png)
+
+###    Website: https://songofy.herokuapp.com/
