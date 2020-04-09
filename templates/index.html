@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% static "images" as baseUrl %}
+
+{% block content %}
+<div class="container-fluid">
+
+	<!-- Top 10 Songs -->
+	<div>
+		<h1 style="text-align :center; display: inline-block;">TOP 10 MUSIC</h1>
+		<button type="button" onClick="window.location.href='/addsong/'" style="float: right; margin-top: 10px;" class="btn btn-outline-primary "><i class="fa fa-plus" style="font-size:15px"></i> Add Song</button>
+	</div>
+
+	<table id="song_data" class="table table-bordered">
+		<thead  style="background-color: #98a2ac">
+		    <tr>
+			    <th scope="col">Cover Photo</th>
+			    <th scope="col">Song</th>
+			    <th scope="col">Date of Release</th>
+			    <th scope="col">Artists</th>
+			    <th scope="col">Avg Rating</th>
+			    <th scope="col">Rate thie song</th>
+		    </tr>
+		</thead>
+	  	<tbody>
+	  	{% for song in details1 %}
+		    <tr>
+			    <th scope="row"><img src="media/{{song.image}}" ></th>
+			    <td>{{song.name}}</td>
+			    <td>{{song.release_date}}</td>
+			    <td>	
+				{% for artist in song.a_id.all %}
+	      		{{artist}}<br>
+	      		{% endfor %}
+	      		</td>
+	      		<td>
+		     		{{song.avg_review|floatformat:0}}
+					<span class="fa fa-star checked"></span>
+				</td>
+				<td style="width: 10%">
+					{% if song.rating.user_id == request.user.id  %}
+					<p>Login to Rate</p>
+					{% else %}
+					<form action="" method="GET">
+					{% csrf_token %}                 
+					  	<select name="count{{song.id}}" class="count{{song.id}}">
+							<option value='1'>1</option>  
+							<option value='2'>2</option>  
+							<option value='3'>3</option>  
+							<option value='4'>4</option>  
+							<option value='5'>5</option>  
+		 				</select>
+					</form>
+					{% endif %}
+					<script type="text/javascript">
+						$(document).ready(function () {
+					    	$('select.count{{song.id}}').change(function () {
+					    	var rate = $('select.count{{song.id}}').val()
+					        // alert(rate);
+
+					        $.ajax({
+					            type: "POST",
+					            url: ('/rating/'),
+					            data: ({
+					                'rating': $('select.count{{song.id}}').val(),
+					                'song_id': {{song.id}}
+					            }),
+					            headers: {
+					                  "X-CSRFToken": "{{csrf_token}}"
+					            }
+					            })
+					            .done(function(data){
+					                alert(data);
+					                  
+					            })
+					            .fail(function(err) {
+					                alert("You already rated this song");
+					            });
+					        });
+						});
+					</script>
+				</td>
+    		</tr>
+    	{% endfor %}
+  	</tbody>
+	</table>
+	<div>
+	<h1 style="text-align :center; display: inline-block;">TOP 10 ARTIST</h1>
+	</div>
+
+	<table class="table table-bordered">
+	  	<thead  style="background-color: #98a2ac">
+		    <tr>
+			    <th scope="col">Artist Name</th>
+			    <th scope="col">Date of Birth</th>
+			    <th scope="col">Biography</th>
+			    <th scope="col">Avg Rating</th>
+		    </tr>
+	  	</thead>
+	  	<tbody>
+			  	{% for artist in details2 %}
+			    <tr>
+				    <th scope="row">{{artist.name}}</th>
+				    <td>{{artist.dob}}</td>
+				    <td>{{artist.bio}}</td>
+			      	<td>
+			      	{{artist.avg_review|floatformat:0}}
+					<span class="fa fa-star checked"></span>
+					</td>
+				</tr>
+		    	{% endfor %}
+	  	</tbody>
+	</table>
+</div>
+<style type="text/css">
+	fieldset, label { margin: 0; padding: 0; }
+
+	.checked {
+	  color: orange;
+	}
+
+	img {
+	    vertical-align: middle;
+	    border-style: none;
+	    size: 20%;
+	    width: 40px;
+	}
+
+
+	img {
+		width: 40px;
+	}
+	.table td, .table th {
+	    text-align: center;
+
+</style>
+
+{% endblock %}

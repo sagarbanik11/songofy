@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+	<!-- ADD NEW SONG-->	
+	<div class="modal-header">
+	 	<h4 class="modal-title;">ADD NEW SONG</h4>
+	</div>
+	<form method="POST" action="/addsong/" enctype = "multipart/form-data">
+		{% csrf_token %}
+	 	<div class="form-group col-md-4">
+		    <label for="inputAddress">Song Title*</label>
+		    <input type="text" name="name" class="form-control" id="inputAddress" placeholder="Song Title" required>
+	  	</div>
+	  	<div class="form-group col-md-4">
+		    <label for="inputAddress2">Date of release*</label>
+		    <input type="date" name="release_date" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor" required>
+	  	</div>
+	    <div class="form-group col-md-4">
+	      	<label for="inputState">Artists Name*</label>
+     		<div class="input-group-prepend" id="UserList" name="UserList" >
+      			<select  name="a_id" style=" display: none; border: 1px solid #ced4da;" id="a_id" multiple="multiple" class="multiselect-ui form-control" required>
+      			{% for artist in artists %}
+      			<option  value="{{artist.id}}">{{artist.name}}</option>
+		        {% endfor %}
+	      		</select>
+      			<button data-toggle="modal" type="button" data-target="#myModal"  class="btn btn-outline-primary "><i class="fa fa-plus" style="font-size:15px"></i></button>
+      		</div>
+		</div>
+			
+	    <div class="form-group col-md-4">
+	      	<label for="inputState">Upload Cover Image*</label>
+		    <div class="upload-btn-wrapper">
+			  	<input type="file" name="image" required>
+			</div>
+	  	</div>
+	  	 
+	  	{% for message in messages %}
+	  	<div class="form-group col-md-4">
+	      	<b><p style="color: green">{{message}}</p></b>
+	  	</div>
+        
+        {% endfor %}
+	   <div class="col-md-6" >
+	  		<button type="submit" value="Song" class="btn btn-primary">ADD SONG</button>
+	  	</div>
+	  	<br><br>
+	</form>
+
+	<!-- ADD NEW ARTIST-->
+  	<div id="myModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+			<!-- Modal content-->
+		    <div class="modal-content">
+		      	<div class="modal-header">
+			       		<center> <h4 class="modal-title;">ADD NEW ARTIST</h4></center>
+		      	</div>
+		      	<form method="POST" id="new_artist"  class="new_artist">
+				{% csrf_token %}
+			      	<div class="modal-body">
+			        	<div class="form-group">
+						    <label for="inputAddress">Artist Name*</label>
+						    <input type="text" class="form-control" name="name" id="inputAddress" placeholder="Artist Name" required>
+						</div>
+						<div class="form-group ">
+						    <label for="inputAddress2">Date of Birth*</label>
+						    <input type="date" class="form-control" name="dob" id="inputAddress2" placeholder="DOB" required>
+						</div>
+						<div class="form-group ">
+						    <label for="inputAddress2">Biography*</label>
+						    <textarea type="text" name="bio" class="form-control" id="inputAddress2" placeholder="Write about the artist" required></textarea>
+						</div>
+			      	</div>
+			      	<div class="col-md-6" style="color: green" id="added-success"></div>
+					<div class="col-md-6">
+				  		<button type="submit" style="margin-bottom: 15px;" class="btn btn-primary">ADD ARTIST</button>
+				  	</div>
+		  		</form>
+			    <div class="modal-footer">
+			        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			    </div>
+			</div>
+		</div>
+	</div>
+</div>
+
+	
+<script type="text/javascript">
+	$('#new_artist').on('submit',function(e){
+	 e.preventDefault();
+	 var name = $(this).find("input[name='name']").val();
+	 var dob= $(this).find("input[name='dob']").val();
+	 var bio = $(this).find("textarea[name='bio']").val();
+		$.ajax({
+		      type: "POST",
+		      url: "/artist/",
+		      data: {
+		        'name': name,
+		        'dob': dob,
+		        'bio': bio
+		      },
+		      headers: {
+              "X-CSRFToken": "{{csrf_token}}"
+            }
+          })
+            .done(function(data) {
+            	$('select[name=a_id]').children().remove()
+              document.getElementById("new_artist").reset();
+              console.log(data);
+              	$.each(data, function(id, name){
+              	
+            	$('select[name=a_id]').append('<option value="' + this.id + '">' + this.name +'</option>')
+            
+            })
+              	  $('.multiselect-ui').multiselect('rebuild');
+              	  // alert('Artist Added Successfully')
+              	  // document.getElementById('added-success').display='block'
+              	  document.getElementById('added-success').innerHTML='Artist Added Successfully'
+          
+              })
+            .fail(function(err) {
+              alert("Fail");
+            });
+        });
+</script>
+<script type="text/javascript">
+	$(function() {
+	    $('.multiselect-ui').multiselect({
+	        includeSelectAllOption: true
+	    });
+	});
+</script>
+<style type="text/css">
+form label {font-weight:bold};
+
+.upload-btn-wrapper input[type=file] {
+  font-size: 100px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  opacity: 0;
+
+}
+.upload-btn-wrapper {
+  position: relative;
+  overflow: hidden;
+  
+}
+.input-group-prepend .btn {
+    border: 1px solid #ced4da;
+   /* width: 100%;*/
+}
+span.multiselect-native-select{
+	width: 100%;
+}
+.multiselect-container{
+	width: 87%;
+}
+</style>
+
+
+{% endblock %}
