@@ -44,4 +44,4 @@ Screenshots
 
 ![Add Artist](https://bitbucket.org/sagarbanik/songofy/raw/97bc96417666072be91bc78d56c8af7b9343dca7/media/readme/addartist.png)
 
-###    Website: https://songofy.herokuapp.com/
+###    Website: https://songofy.herokuapp.com
