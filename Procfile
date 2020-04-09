@@ -1,0 +1,1 @@
+web gunicorn songofy.wsgi --log-file -
